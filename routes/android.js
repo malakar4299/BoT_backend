@@ -21,7 +21,7 @@ router.get('/get-token', function(req, res, next) {
         'code': cs.code,
         'client_id': cs.web.client_id,
         'client_secret': cs.web.client_secret,
-        'redirect_uri': 'http://localhost:3000',
+        'redirect_uri': 'https://bo-t-backend.vercel.app',
         'grant_type': 'authorization_code',
     }).then(result => {
         // res.cookie('refresh_token', result.data.a)
@@ -93,7 +93,7 @@ router.post('/user/calender/add', async function(req, res, next) {
         try {
             return userModel.findOne({ email: email }).then(async user => {
                 if (user) {
-                    const savedUser = await axios.get("http://localhost:3000/api/android/get-token?token="+authorization).then(token => {
+                    const savedUser = await axios.get("https://bo-t-backend.vercel.app/api/android/get-token?token="+authorization).then(token => {
                         return token;
                     })
                     console.log(savedUser)
@@ -106,7 +106,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                     const calendarData = {
                         summary: `BOT Calendar`
                     };
-                    const savedUser = await axios.get("http://localhost:3000/api/android/get-token?token="+authorization).then(token => {
+                    const savedUser = await axios.get("https://bo-t-backend.vercel.app/api/android/get-token?token="+authorization).then(token => {
                         const accessToken = token.data.access_token
                         const response = axios.post(
                             "https://www.googleapis.com/calendar/v3/calendars",
