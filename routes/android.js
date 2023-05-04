@@ -211,15 +211,16 @@ router.post('/calender/event/create', function (req,res,next) {
                                 start_time = leg.departure_time.text
                                 arrival_time = leg.arrival_time.text
                                 transit_duration = leg.duration.text
-                                leg.steps.map(step => {
-                                    if(step.travel_mode=='TRANSIT'){
-                                        legsData.push(step.transit_details)
-                                        console.log(step.transit_details)
-                                    }else{
-                                        legsData.push(step)
-                                        console.log(step)
-                                    }
-                                })
+                                // leg.steps.map(step => {
+                                //     if(step.travel_mode=='TRANSIT'){
+                                //         legsData.push(step.transit_details)
+                                //         console.log(step.transit_details)
+                                //     }else{
+                                //         legsData.push(step)
+                                //         console.log(step)
+                                //     }
+                                // })
+                                legsData.push(leg.step)
                             })
 
                             // // Get the full transit path
