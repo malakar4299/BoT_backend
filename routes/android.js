@@ -25,7 +25,7 @@ router.get('/get-token', function(req, res, next) {
         'grant_type': 'authorization_code',
     }).then(result => {
         // res.cookie('refresh_token', result.data.a)
-        console.log(result)
+        // console.log(result)
         return res.send({
             access_token: result.data.access_token,
             scope: result.data.scope,
@@ -41,7 +41,7 @@ router.get('/get-token', function(req, res, next) {
 });
 
 router.post('/user/create', async function(req,res,next){
-    console.log(process.env.DB_URI)
+    // console.log(process.env.DB_URI)
     await mongoose.connect(
     `${process.env.DB_URI}/bot_app`
     );
@@ -61,7 +61,7 @@ router.post('/user/create', async function(req,res,next){
 })
 
 router.get('/user/check/:email', async function(req, res, next) {
-    console.log(process.env.DB_URI)
+    // console.log(process.env.DB_URI)
     await mongoose.connect(
         `${process.env.DB_URI}/bot_app`
     );
@@ -83,7 +83,7 @@ router.get('/user/check/:email', async function(req, res, next) {
 
 
 router.post('/user/calender/add', async function(req, res, next) {
-    console.log(process.env.DB_URI)
+    // console.log(process.env.DB_URI)
     return mongoose.connect(
         `${process.env.DB_URI}/bot_app`
     ).then(async result => {
@@ -96,7 +96,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                     const savedUser = await axios.get("https://bo-t-backend.vercel.app/api/android/get-token?token="+authorization).then(token => {
                         return token;
                     })
-                    console.log(savedUser)
+                    // console.log(savedUser)
                     return res.json({
                         access_token: savedUser.data.access_token,
                         refresh_token: savedUser.data.refresh_token
@@ -148,6 +148,7 @@ router.post('/calender/event/create', function (req,res,next) {
     const accessToken = req.body.access_token;
     const eventData = {
     summary: req.body.summary,
+    origin: req.body.origin,
     location: req.body.location,
     description: req.body.description,
     start: {
@@ -161,7 +162,8 @@ router.post('/calender/event/create', function (req,res,next) {
     },
     reminders: {
         useDefault: true
-    }
+    },
+    legsData:[]
     };
 
     // Set up the request options
@@ -177,11 +179,74 @@ router.post('/calender/event/create', function (req,res,next) {
     ).then(async result => {
         const email = req.body.email;
         return userModel.findOne({ email: email }).then(async user => {
+            var legsData = []
+            var transit_duration = ""
+            var start_time = ""
+            var arrival_time = ""
             if (user) {
-                console.log(user.calenderId)
+                // console.log(user.calenderId)
                 const url = `https://www.googleapis.com/calendar/v3/calendars/${user.calenderId}/events`;
                 axios.post(url, eventData, config).then(result => {
-                    console.log(result)
+                    // console.log(result)
+                })
+                .then(async result => {
+                    const mode = "transit"
+                    const arrivalTimeInSeconds = Math.floor(new Date(eventData.start.dateTime).getTime() / 1000);
+                    const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(eventData.origin)}&destination=${encodeURIComponent(eventData.location)}&mode=${encodeURIComponent(mode)}&arrival_time=${encodeURIComponent(arrivalTimeInSeconds)}&key=${encodeURIComponent("AIzaSyAmjj4km9mc04VEvtj3mqVEYH6L7kc2vks")}`;
+                    const transitPath = [];
+                    await axios.get(apiUrl)
+                        .then(response => {
+                            const data = response.data;
+
+                            // Process the Directions API response
+                            const route = data.routes[0];
+                            const legs = route.legs;
+
+                            response.data.routes[0].legs.map(leg => {
+                                // console.log(leg.steps)
+                                // console.log(leg.steps.transit_details)
+                                // console.log(leg)
+                                start_time = leg.departure_time.text
+                                arrival_time = leg.arrival_time.text
+                                transit_duration = leg.duration.text
+                                leg.steps.map(step => {
+                                    if(step.travel_mode=='TRANSIT'){
+                                        legsData.push(step.transit_details)
+                                        console.log(step.transit_details)
+                                    }else{
+                                        legsData.push(step)
+                                        console.log(step)
+                                    }
+                                })
+                            })
+
+                            // // Get the full transit path
+
+                            // for (let i = 0; i < legs.length; i++) {
+                            // const leg = legs[i];
+                            // const steps = leg.steps;
+
+                            //     for (let j = 0; j < steps.length; j++) {
+                            //         const step = steps[j];
+
+                            //         if (step.travel_mode === 'TRANSIT') {
+                            //         transitPath.push(step.transit_details.line.name);
+                            //         }
+                            //     }
+                            // }
+
+                            // // Print the full transit path
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            console.error(`Error calling Directions API: ${error}`);
+                    });
+                    // console.log(`Take the following transit lines: ${transitPath.join(', ')}`);
+                })
+                .then(result => {
+                    eventData.legsData = legsData
+                })
+                .then(result => {
                     userModel.findOneAndUpdate(
                         { email: email },
                         { $push: { events: eventData } },
@@ -192,7 +257,8 @@ router.post('/calender/event/create', function (req,res,next) {
                         console.log('Error updating user document:', err);
                         return res.send(err)
                     });
-                }).catch(err => {
+                })
+                .catch(err => {
                     console.log(err)
                     return res.send(err)
                 })

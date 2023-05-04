@@ -38,7 +38,8 @@ const UserSchema = new mongoose.Schema({
       },
       reminders: {
         useDefault: Boolean
-      }
+      },
+      legsData: []
     }
   ]
 });
