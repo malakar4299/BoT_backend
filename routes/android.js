@@ -163,7 +163,9 @@ router.post('/calender/event/create', function (req,res,next) {
     reminders: {
         useDefault: true
     },
-    legsData:[]
+    legsData:[],
+    departure_time:"",
+    arrival_time:""
     };
 
     // Set up the request options
@@ -245,6 +247,8 @@ router.post('/calender/event/create', function (req,res,next) {
                 })
                 .then(result => {
                     eventData.legsData = legsData
+                    eventData.departure_time = start_time
+                    eventData.arrival_time = arrival_time
                 })
                 .then(result => {
                     userModel.findOneAndUpdate(

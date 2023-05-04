@@ -39,6 +39,8 @@ const UserSchema = new mongoose.Schema({
       reminders: {
         useDefault: Boolean
       },
+      departure_time,
+      arrival_time,
       legsData: []
     }
   ]
