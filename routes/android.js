@@ -189,16 +189,20 @@ router.post('/calender/event/create', function (req,res,next) {
                         console.log('Event added to the user document:', updatedUser);
                     }).catch(err => {
                         console.log('Error updating user document:', err);
+                        return res.send(err)
                     });
                 }).catch(err => {
                     console.log(err)
+                    return res.send(err)
                 })
             }
         }).catch(err => {
             console.log(err)
+            return res.send(err)
         })
     }).catch(err => {
         console.log(err)
+        return res.send(err)
     })
 
     return res.send("Event created succesfully")
