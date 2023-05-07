@@ -5,6 +5,7 @@ const cs = require('./client_secret.json')
 const config = require('dotenv')
 const mongoose = require("mongoose");
 const userModel = require("../models/users")
+const commentModel = require("../models/comments")
 
 
 mongoose.set("strictQuery", false);
@@ -383,6 +384,94 @@ router.get("/user/home/check/:email", async function(req,res,next) {
             "address":"N/A"
         })
     }
+})
+
+router.post("/transports/comment", async function (req,res,next){
+    const userEmail = req.body.email 
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+        .then(async result => {
+            return await userModel.findOne({email: userEmail})
+                .then(async user => {
+                    if (!user) {
+                        return res.status(404).send("User not found");
+                    }
+                    const comment = new commentModel({
+                        userEmail: req.body.email,
+                        comment: req.body.comment,
+                        transportNumber: req.body.transportNumber,
+                        stopName: req.body.stopName
+                    })
+                    try {
+                        commentData = await comment.save().then(res => {
+                          return res
+                        }).catch(err => {
+                          console.log(err)
+                        })
+                        return res.send(commentData)
+                      } catch (error) {
+                          console.log(error)
+                        res.status(500).send(error);
+                      }
+                })
+        })
+
+    return response;
+})
+
+router.get("/transports/comments/all", async function (req, res, next){
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    .then(async result => {
+        const start = new Date().toDateString();
+        return await commentModel.find({createdAt: {$gte : start }}).sort({createdAt: -1}).then(result => {
+            return res.send(result)
+        })
+    })
+    return response;
+})
+
+router.get("/transports/comments/by-train/:trainNumber", async function (req, res, next){
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    .then(async result => {
+        const start = new Date().toDateString();
+        return await commentModel.find({transportNumber: req.params.trainNumber,createdAt: {$gte : start }}).sort({createdAt: 1}).then(result => {
+            return res.send(result)
+        })
+    })
+    return response;
+})
+
+router.get("/transports/comments/by-stop/:stop", async function (req, res, next){
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    .then(async result => {
+        const start = new Date().toDateString();
+        return await commentModel.find({stopName: req.params.stop,createdAt: {$gte : start }}).then(result => {
+            return res.send(result)
+        })
+    })
+
+    return response;
+})
+
+router.get("/transports/comments/availableNumbers", async function(req,res,next){
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    .then(async result => {
+        return await commentModel.find().distinct('transportNumber').then(result => {
+            return res.send(result)
+        })
+    })
+
+    return response;
+})
+
+router.get("/transports/comments/availableStops", async function(req,res,next){
+    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    .then(async result => {
+        return await commentModel.find().distinct('stopName').then(result => {
+            return res.send(result)
+        })
+    })
+
+    return response;
 })
 
 
