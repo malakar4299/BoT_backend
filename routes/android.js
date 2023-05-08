@@ -133,7 +133,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                 name: name,
                                 email: email,
                                 calenderId: calendarId,
-                                refreshToken: token.refresh_token
+                                refreshToken: token.data.refresh_token
                             });
                             const savedUser = newUser.save();
                             return savedUser;
