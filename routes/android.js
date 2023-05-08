@@ -11,8 +11,8 @@ const commentModel = require("../models/comments")
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb://127.0.0.1/my_database";
 
-const bot_uri = "http://localhost:3000"
-//  const bot_uri = "https://bo-t-backend.vercel.app"
+// const bot_uri = "http://localhost:3000"
+ const bot_uri = "https://bo-t-backend.vercel.app"
 
 
 var router = express.Router();
