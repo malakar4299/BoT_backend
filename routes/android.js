@@ -106,7 +106,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                     return res.json({
                         success: true,
                         access_token: savedUser.data.access_token,
-                        refresh_token: savedUser.data.refresh_token
+                        refresh_token: user.refreshToken
                     });
                 } else {
                     // Create a new calendar for the user
@@ -133,6 +133,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                 name: name,
                                 email: email,
                                 calenderId: calendarId,
+                                refreshToken: token.refresh_token
                             });
                             const savedUser = await newUser.save();
                             return savedUser;
