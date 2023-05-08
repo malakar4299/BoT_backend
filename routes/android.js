@@ -178,7 +178,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                     }).then(result => {
                         // res.cookie('refresh_token', result.data.a)
                         console.log(result)
-                        return res.send({
+                        res.send({
                             success: true,
                             access_token: result.data.access_token,
                             scope: result.data.scope,
@@ -189,15 +189,26 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                         })
                     }).catch(err => {
                         console.log(err)
-                        return res.send({
+                        res.send({
                             success: false
                         })
                     })
                 })
                 .catch(err => {
                     console.log(err)
+                    res.send({
+                        success: false,
+                        error: err
+                    })
+                })
         })
-    })
+        .catch(err => {
+            console.log(err)
+            res.send({
+                success: false,
+                error: err
+            })
+        })
 })
 
 router.post('/calender/event/create', function (req,res,next) {
