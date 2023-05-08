@@ -9,10 +9,11 @@ const commentModel = require("../models/comments")
 
 
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb://127.0.0.1/my_database";
 
-// const bot_uri = "http://localhost:3000"
- const bot_uri = "https://bo-t-backend.vercel.app"
+const bot_uri = "http://localhost:3000"
+//  const bot_uri = "https://bo-t-backend.vercel.app"
+
+const db_uri = "mongodb+srv://amalakar:uI4W9lZLqpJ28eqL@bot-app.2jqsty0.mongodb.net"
 
 
 var router = express.Router();
@@ -47,7 +48,7 @@ router.get('/get-token', function(req, res, next) {
 router.post('/user/create', async function(req,res,next){
     // console.log(process.env.DB_URI)
     await mongoose.connect(
-    `${process.env.DB_URI}/bot_app`
+    `${db_uri}/bot_app`
     );
 
     const user = new userModel(req.body);
@@ -67,7 +68,7 @@ router.post('/user/create', async function(req,res,next){
 router.get('/user/check/:email', async function(req, res, next) {
     // console.log(process.env.DB_URI)
     await mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
     );
 
     const email = req.params.email;
@@ -89,7 +90,7 @@ router.get('/user/check/:email', async function(req, res, next) {
 router.post('/user/calender/add', async function(req, res, next) {
     // console.log(process.env.DB_URI)
     return mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
     ).then(async result => {
         const name = req.body.name
         const email = req.body.email;
@@ -214,7 +215,7 @@ router.post('/calender/event/create', function (req,res,next) {
     };
 
     mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
     ).then(async result => {
         const email = req.body.email;
         return userModel.findOne({ email: email }).then(async user => {
@@ -323,7 +324,7 @@ router.post('/user/calender/event', async function (req, res) {
     const email = req.body.email;
 
     mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
     ).then(async result => {
         if (!email) {
             return res.status(400).send("Email is required in the request body");
@@ -352,7 +353,7 @@ router.post("/user/update/home", async function (req,res,next){
 
     // Update the user's homeAddress field
     const update = await mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
         ).then(async result => {
             await userModel.findOneAndUpdate({ email: userEmail }, { homeAddress: newHomeAddress }, { new: true })
             .then(updatedUser => {
@@ -381,7 +382,7 @@ router.get("/user/home/check/:email", async function(req,res,next) {
     var address;
 
     const home = await mongoose.connect(
-        `${process.env.DB_URI}/bot_app`
+        `${db_uri}/bot_app`
         ).then(async result => {
         return await userModel.findOne({ email: userEmail })
         .then(user => {
@@ -424,7 +425,7 @@ router.get("/user/home/check/:email", async function(req,res,next) {
 
 router.post("/transports/comment", async function (req,res,next){
     const userEmail = req.body.email 
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
         .then(async result => {
             return await userModel.findOne({email: userEmail})
                 .then(async user => {
@@ -455,7 +456,7 @@ router.post("/transports/comment", async function (req,res,next){
 })
 
 router.get("/transports/comments/all", async function (req, res, next){
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
     .then(async result => {
         const start = new Date().toDateString();
         return await commentModel.find({createdAt: {$gte : start }}).sort({createdAt: -1}).then(result => {
@@ -466,7 +467,7 @@ router.get("/transports/comments/all", async function (req, res, next){
 })
 
 router.get("/transports/comments/by-train/:trainNumber", async function (req, res, next){
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
     .then(async result => {
         const start = new Date().toDateString();
         return await commentModel.find({transportNumber: req.params.trainNumber,createdAt: {$gte : start }}).sort({createdAt: 1}).then(result => {
@@ -477,7 +478,7 @@ router.get("/transports/comments/by-train/:trainNumber", async function (req, re
 })
 
 router.get("/transports/comments/by-stop/:stop", async function (req, res, next){
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
     .then(async result => {
         const start = new Date().toDateString();
         return await commentModel.find({stopName: req.params.stop,createdAt: {$gte : start }}).then(result => {
@@ -489,7 +490,7 @@ router.get("/transports/comments/by-stop/:stop", async function (req, res, next)
 })
 
 router.get("/transports/comments/availableNumbers", async function(req,res,next){
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
     .then(async result => {
         return await commentModel.find().distinct('transportNumber').then(result => {
             return res.send(result)
@@ -500,7 +501,7 @@ router.get("/transports/comments/availableNumbers", async function(req,res,next)
 })
 
 router.get("/transports/comments/availableStops", async function(req,res,next){
-    const response = mongoose.connect(`${process.env.DB_URI}/bot_app`)
+    const response = mongoose.connect(`${db_uri}/bot_app`)
     .then(async result => {
         return await commentModel.find().distinct('stopName').then(result => {
             return res.send(result)
