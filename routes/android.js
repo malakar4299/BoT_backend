@@ -178,7 +178,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                         'refresh_token': user.refreshToken,
                         'client_id': cs.web.client_id,
                         'client_secret': cs.web.client_secret,
-                        'redirect_uri': redirect_uri,
+                        'redirect_uri': bot_uri,
                         'grant_type': 'refresh_token',
                     }).then(result => {
                         // res.cookie('refresh_token', result.data.a)
