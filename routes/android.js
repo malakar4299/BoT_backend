@@ -511,5 +511,19 @@ router.get("/transports/comments/availableStops", async function(req,res,next){
     return response;
 })
 
+router.post("/logout", (req,res,next) => {
+    axios.post('https://accounts.google.com/o/oauth2/revoke', null, {
+        params: {
+            token: req.body.accessToken
+        }
+    })
+    .then(response => {
+    console.log('Access token has been revoked');
+    })
+    .catch(error => {
+    console.error('Error revoking access token:', error.response.data);
+    });
+})
+
 
 module.exports = router;
