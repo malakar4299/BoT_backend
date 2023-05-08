@@ -169,6 +169,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
     ).then(async result => {
         return userModel.findOne({ email: email })
             .then(async user => {
+                console.log(user)
                 if(!user){
                     return {
                         success: false
