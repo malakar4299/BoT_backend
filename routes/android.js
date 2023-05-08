@@ -114,6 +114,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                         summary: `BOT Calendar`
                     };
                     const savedUser = await axios.get(bot_uri + "/api/android/get-token?token="+authorization).then(token => {
+                        console.log(token)
                         const accessToken = token.data.access_token
                         const response = axios.post(
                             "https://www.googleapis.com/calendar/v3/calendars",
@@ -124,6 +125,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                 },
                             }
                         ).then(calender => {
+                            console.log(calender)
                             const calendarId = calender.data.id;
             
                             // Create a new user with the given email and calendarId
