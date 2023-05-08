@@ -113,10 +113,10 @@ router.post('/user/calender/add', async function(req, res, next) {
                     const calendarData = {
                         summary: `BOT Calendar`
                     };
-                    const savedUser = await axios.get(bot_uri + "/api/android/get-token?token="+authorization).then(token => {
+                    const savedUser = await axios.get(bot_uri + "/api/android/get-token?token="+authorization).then(async token => {
                         console.log(token)
                         const accessToken = token.data.access_token
-                        const response = axios.post(
+                        const response = await axios.post(
                             "https://www.googleapis.com/calendar/v3/calendars",
                             calendarData,
                             {
@@ -124,7 +124,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                     Authorization: `Bearer ${accessToken}`,
                                 },
                             }
-                        ).then(calender => {
+                        ).then(async calender => {
                             console.log(calender)
                             const calendarId = calender.data.id;
             
@@ -134,7 +134,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                 email: email,
                                 calenderId: calendarId,
                             });
-                            const savedUser = newUser.save();
+                            const savedUser = await newUser.save();
                             return savedUser;
                         }).catch(err => {
                             console.log(err)
