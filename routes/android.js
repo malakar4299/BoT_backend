@@ -124,7 +124,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                     Authorization: `Bearer ${accessToken}`,
                                 },
                             }
-                        ).then(async calender => {
+                        ).then(calender => {
                             console.log(calender)
                             const calendarId = calender.data.id;
             
@@ -162,27 +162,38 @@ router.post('/user/calender/add', async function(req, res, next) {
     })
 });
 
-router.get('/refresh-token/:refresh', function(req, res, next) {
-    const refresh_token = req.params.refresh
-    axios.post('https://accounts.google.com/o/oauth2/token', {
-        'refresh_token': refresh_token,
-        'client_id': cs.web.client_id,
-        'client_secret': cs.web.client_secret,
-        'redirect_uri': redirect_uri,
-        'grant_type': 'refresh_token',
-    }).then(result => {
-        // res.cookie('refresh_token', result.data.a)
-        console.log(result)
-        return res.send({
-            access_token: result.data.access_token,
-            scope: result.data.scope,
-            expires_in: result.data.expires_in,
-            token_type: result.data.token_type,
-            id_token: result.data.id_token,
-            refresh_token: result.data.refresh_token
+router.get('/refresh-token/:email', async function(req, res, next) {
+    const email = req.params.email
+    const home = await mongoose.connect(
+        `${db_uri}/bot_app`
+        ).then(async result => {
+        return await userModel.findOne({ email: userEmail })
+        .then(user => {
+            axios.post('https://accounts.google.com/o/oauth2/token', {
+                'refresh_token': user.refreshToken,
+                'client_id': cs.web.client_id,
+                'client_secret': cs.web.client_secret,
+                'redirect_uri': redirect_uri,
+                'grant_type': 'refresh_token',
+            }).then(result => {
+                // res.cookie('refresh_token', result.data.a)
+                console.log(result)
+                return res.send({
+                    success: true,
+                    access_token: result.data.access_token,
+                    scope: result.data.scope,
+                    expires_in: result.data.expires_in,
+                    token_type: result.data.token_type,
+                    id_token: result.data.id_token,
+                    refresh_token: user.refreshToken
+                })
+            }).catch(err => {
+                console.log(err)
+                return res.send({
+                    success: false
+                })
+            })
         })
-    }).catch(err => {
-        console.log(err)
     })
 })
 
