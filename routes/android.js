@@ -523,9 +523,11 @@ router.post("/logout", (req,res,next) => {
     })
     .then(response => {
     console.log('Access token has been revoked');
+    res.send("Token revoked")
     })
     .catch(error => {
     console.error('Error revoking access token:', error.response.data);
+    res.send("Error")
     });
 })
 
