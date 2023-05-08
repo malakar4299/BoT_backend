@@ -182,8 +182,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                         'grant_type': 'refresh_token',
                     }).then(result => {
                         // res.cookie('refresh_token', result.data.a)
-                        console.log(result)
-                        return {
+                        return res.send({
                             success: true,
                             access_token: result.data.access_token,
                             scope: result.data.scope,
@@ -191,7 +190,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                             token_type: result.data.token_type,
                             id_token: result.data.id_token,
                             refresh_token: user.refreshToken
-                        }
+                        })
                     }).catch(err => {
                         console.log(err)
                         return {
