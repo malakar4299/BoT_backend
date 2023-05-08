@@ -135,7 +135,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                                 calenderId: calendarId,
                                 refreshToken: token.refresh_token
                             });
-                            const savedUser = await newUser.save();
+                            const savedUser = newUser.save();
                             return savedUser;
                         }).catch(err => {
                             console.log(err)
