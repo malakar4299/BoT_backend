@@ -11,6 +11,9 @@ const commentModel = require("../models/comments")
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb://127.0.0.1/my_database";
 
+const bot_uri = "http://localhost:3000"
+//  const bot_uri = "https://bo-t-backend.vercel.app"
+
 
 var router = express.Router();
 
@@ -22,7 +25,7 @@ router.get('/get-token', function(req, res, next) {
         'code': cs.code,
         'client_id': cs.web.client_id,
         'client_secret': cs.web.client_secret,
-        'redirect_uri': 'https://bo-t-backend.vercel.app',
+        'redirect_uri': bot_uri,
         'grant_type': 'authorization_code',
     }).then(result => {
         // res.cookie('refresh_token', result.data.a)
@@ -94,11 +97,12 @@ router.post('/user/calender/add', async function(req, res, next) {
         try {
             return userModel.findOne({ email: email }).then(async user => {
                 if (user) {
-                    const savedUser = await axios.get("https://bo-t-backend.vercel.app/api/android/get-token?token="+authorization).then(token => {
+                    const savedUser = await axios.get(bot_uri + "/api/android/get-token?token="+authorization).then(token => {
                         return token;
                     })
                     // console.log(savedUser)
                     return res.json({
+                        success: true,
                         access_token: savedUser.data.access_token,
                         refresh_token: savedUser.data.refresh_token
                     });
@@ -107,7 +111,7 @@ router.post('/user/calender/add', async function(req, res, next) {
                     const calendarData = {
                         summary: `BOT Calendar`
                     };
-                    const savedUser = await axios.get("https://bo-t-backend.vercel.app/api/android/get-token?token="+authorization).then(token => {
+                    const savedUser = await axios.get(bot_uri + "/api/android/get-token?token="+authorization).then(token => {
                         const accessToken = token.data.access_token
                         const response = axios.post(
                             "https://www.googleapis.com/calendar/v3/calendars",
@@ -130,12 +134,15 @@ router.post('/user/calender/add', async function(req, res, next) {
                             return savedUser;
                         }).catch(err => {
                             console.log(err)
-                            res.send(err)
+                            res.send({
+                                success: false
+                            })
                         })
     
                         return token
                     })
                     return res.send({
+                        success: true,
                         access_token: savedUser.data.access_token,
                         refresh_token: savedUser.data.refresh_token
                     });
@@ -143,7 +150,9 @@ router.post('/user/calender/add', async function(req, res, next) {
             })
         } catch (error) {
             console.log(error);
-            res.status(500).send(error);
+            res.status(500).send({
+                success: false
+            });
         }
     })
 });
