@@ -257,66 +257,6 @@ router.post('/calender/event/create', function (req,res,next) {
                 axios.post(url, eventData, config).then(result => {
                     // console.log(result)
                 })
-                // .then(async result => {
-                //     const mode = "transit"
-                //     const arrivalTimeInSeconds = Math.floor(new Date(eventData.start.dateTime).getTime() / 1000);
-                //     const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(eventData.origin)}&destination=${encodeURIComponent(eventData.location)}&mode=${encodeURIComponent(mode)}&arrival_time=${encodeURIComponent(arrivalTimeInSeconds)}&key=${encodeURIComponent("AIzaSyAmjj4km9mc04VEvtj3mqVEYH6L7kc2vks")}`;
-                //     const transitPath = [];
-                //     await axios.get(apiUrl)
-                //         .then(response => {
-                //             const data = response.data;
-
-                //             // Process the Directions API response
-                //             const route = data.routes[0];
-                //             const legs = route.legs;
-
-                //             response.data.routes[0].legs.map(leg => {
-                //                 // console.log(leg.steps)
-                //                 // console.log(leg.steps.transit_details)
-                //                 // console.log(leg)
-                //                 start_time = leg.departure_time.text
-                //                 arrival_time = leg.arrival_time.text
-                //                 transit_duration = leg.duration.text
-                //                 // leg.steps.map(step => {
-                //                 //     if(step.travel_mode=='TRANSIT'){
-                //                 //         legsData.push(step.transit_details)
-                //                 //         console.log(step.transit_details)
-                //                 //     }else{
-                //                 //         legsData.push(step)
-                //                 //         console.log(step)
-                //                 //     }
-                //                 // })
-                //                 legsData.push(leg.step)
-                //             })
-
-                //             // // Get the full transit path
-
-                //             // for (let i = 0; i < legs.length; i++) {
-                //             // const leg = legs[i];
-                //             // const steps = leg.steps;
-
-                //             //     for (let j = 0; j < steps.length; j++) {
-                //             //         const step = steps[j];
-
-                //             //         if (step.travel_mode === 'TRANSIT') {
-                //             //         transitPath.push(step.transit_details.line.name);
-                //             //         }
-                //             //     }
-                //             // }
-
-                //             // // Print the full transit path
-                //         })
-                //         .catch(error => {
-                //             console.log(error)
-                //             console.error(`Error calling Directions API: ${error}`);
-                //     });
-                //     // console.log(`Take the following transit lines: ${transitPath.join(', ')}`);
-                // })
-                // .then(result => {
-                //     eventData.legsData = legsData
-                //     eventData.departure_time = start_time
-                //     eventData.arrival_time = arrival_time
-                // })
                 .then(result => {
                     userModel.findOneAndUpdate(
                         { email: email },
