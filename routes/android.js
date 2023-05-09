@@ -232,9 +232,9 @@ router.post('/calender/event/create', function (req,res,next) {
     legsData:req.body.legsData,
     duration:req.body.duration,
     distance:req.body.distance,
-    recurrence: [
-        `RRULE:FREQ=${req.body.repeat}`
-    ],
+    // recurrence: [
+    //     `RRULE:FREQ=${req.body.repeat};COUNT=13`
+    // ],
     };
 
     // Set up the request options
