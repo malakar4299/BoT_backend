@@ -171,9 +171,9 @@ router.get('/refresh-token/:email', async function(req, res, next) {
             .then(async user => {
                 console.log(user)
                 if(!user){
-                    return {
+                    return res.send({
                         success: false
-                    }
+                    })
                 }else{
                     await axios.post('https://accounts.google.com/o/oauth2/token', {
                         'refresh_token': user.refreshToken,
@@ -207,7 +207,7 @@ router.get('/refresh-token/:email', async function(req, res, next) {
             })
     })
 
-    return details
+    return res.send(details)
 })
 
 router.post('/calender/event/create', function (req,res,next) {
