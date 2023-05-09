@@ -194,11 +194,16 @@ router.get('/refresh-token/:email', async function(req, res, next) {
                         })
                     }).catch(err => {
                         console.log(err)
-                        return {
+                        return res.send({
                             success: false
-                        }
+                        })
                     })
                 }
+            }).catch(err => {
+                console.log(err)
+                return res.send({
+                    success: false,
+                })
             })
     })
 
