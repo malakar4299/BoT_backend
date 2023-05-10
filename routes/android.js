@@ -351,13 +351,18 @@ router.post('/user/calender/event/today', async function (req, res) {
 
                 // Get the current date
                 const today = new Date();
+                const timeZone = 'America/New_York';
 
-                // Compare the date portions of eventDate and today
-                const isToday = eventDate.getDate() === today.getDate() &&
-                                eventDate.getMonth() === today.getMonth() &&
-                                eventDate.getFullYear() === today.getFullYear();
-
-                // Return true if eventDate is in today, else false
+                // Convert the dates to the specified timezone
+                const eventDateInNY = new Date(eventDate.toLocaleString('en-US', { timeZone }));
+                const todayInNY = new Date(today.toLocaleString('en-US', { timeZone }));
+            
+                // Compare the date portions of eventDateInNY and todayInNY
+                const isToday = eventDateInNY.getDate() === todayInNY.getDate() &&
+                                eventDateInNY.getMonth() === todayInNY.getMonth() &&
+                                eventDateInNY.getFullYear() === todayInNY.getFullYear();
+            
+                // Return true if eventDateInNY is in todayInNY, else false
                 return isToday;
             }) || [];
 
