@@ -358,9 +358,9 @@ router.post('/user/calender/event/today', async function (req, res) {
                 const todayInNY = new Date(today.toLocaleString('en-US', { timeZone }));
             
                 // Compare the date portions of eventDateInNY and todayInNY
-                const isToday = eventDateInNY.getDate() === todayInNY.getDate() &&
-                                eventDateInNY.getMonth() === todayInNY.getMonth() &&
-                                eventDateInNY.getFullYear() === todayInNY.getFullYear();
+                const isToday = eventDate.getDate() === todayInNY.getDate() &&
+                                eventDate.getMonth() === todayInNY.getMonth() &&
+                                eventDate.getFullYear() === todayInNY.getFullYear();
             
                 // Return true if eventDateInNY is in todayInNY, else false
                 return isToday;
