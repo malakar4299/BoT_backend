@@ -312,6 +312,7 @@ router.post('/user/calender/event', async function (req, res) {
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
                 const today = new Date();
+                today.setDate(today.getDate() - 1);
                 return (eventDate >= today);
             }) || [];
 
@@ -347,6 +348,7 @@ router.post('/user/calender/event/today', async function (req, res) {
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
                 const today = new Date();
+                today.setDate(today.getDate() - 1);
                 return (eventDate == today);
             }) || [];
 
