@@ -7,6 +7,21 @@ const mongoose = require("mongoose");
 const userModel = require("../models/users")
 const commentModel = require("../models/comments")
 
+/**
+ * @swagger
+ * tags:
+ *   name: BoT API's
+ *   description: Android API's for BoT
+ * /api/android/get-token:
+ *   get:
+ *     summary: Lists all the books
+ *     tags: [Token]
+ * /api/android/user/create:
+ *   post:
+ *     summary: Create a user in the DB with details from google
+ *     tags: [User]
+ */
+
 
 mongoose.set("strictQuery", false);
 
