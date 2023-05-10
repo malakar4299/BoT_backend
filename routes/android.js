@@ -351,7 +351,7 @@ router.post('/user/calender/event/today', async function (req, res) {
                 today.setDate(today.getDate() - 1);
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                return (eventDate >= today && eventDate<= tomorrow);
+                return (eventDate >= today && eventDate< tomorrow);
             }) || [];
 
             // const events = user.events || [];
