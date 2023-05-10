@@ -16,10 +16,47 @@ const commentModel = require("../models/comments")
  *   get:
  *     summary: Lists all the books
  *     tags: [Token]
+ *     responses:
+ *          200:
+ *              description: Token was retrieved successfully
+ *          500:
+ *              description: Some error occured
  * /api/android/user/create:
  *   post:
  *     summary: Create a user in the DB with details from google
  *     tags: [User]
+ *     responses:
+ *          200:
+ *              description: User created succesfully
+ *          500:
+ *              description: Some error occured
+ * /api/android/user/check/{email}:
+ *   get:
+ *     summary: Check if user with email exists
+ *     tags: [User]
+ *     responses:
+ *          200:
+ *              description: Data recieved succesfully
+ *          404:
+ *              description: No user found
+ *          500:
+ *              description: Some error occured
+ * /api/android/user/home/check/{email}:
+ *   get:
+ *     summary: Check if user with email has a home address
+ *     tags: [User]
+ * /api/android/user/calender/add:
+ *   post:
+ *     summary: Create a Calender for the User
+ *     tags: [User, Calender]
+ * /api/android/calender/event/create:
+ *   post:
+ *     summary: Create an event in the Calender for a user
+ *     tags: [User, Calender]
+ * /api/android/user/calender/event:
+*    post:
+ *     summary: Create an event in the Calender for a user
+ *     tags: [User, Calender]
  */
 
 
