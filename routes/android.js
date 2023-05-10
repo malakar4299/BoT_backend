@@ -346,12 +346,19 @@ router.post('/user/calender/event/today', async function (req, res) {
     
             const events = user.events.filter(event => {
                 // Check if event is happening today or from today
+                // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
+
+                // Get the current date
                 const today = new Date();
-                today.setDate(today.getDate() - 1);
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                return (eventDate >= today && eventDate< tomorrow);
+
+                // Compare the date portions of eventDate and today
+                const isToday = eventDate.getDate() === today.getDate() &&
+                                eventDate.getMonth() === today.getMonth() &&
+                                eventDate.getFullYear() === today.getFullYear();
+
+                // Return true if eventDate is in today, else false
+                return isToday;
             }) || [];
 
             // const events = user.events || [];
