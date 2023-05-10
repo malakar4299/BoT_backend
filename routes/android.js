@@ -325,6 +325,41 @@ router.post('/user/calender/event', async function (req, res) {
     
 })
 
+
+router.post('/user/calender/event/today', async function (req, res) {
+    const email = req.body.email;
+
+    mongoose.connect(
+        `${db_uri}/bot_app`
+    ).then(async result => {
+        if (!email) {
+            return res.status(400).send("Email is required in the request body");
+        }
+    
+        try {
+            const user = await userModel.findOne({ email: email });
+    
+            if (!user) {
+                return res.status(404).send("User not found");
+            }
+    
+            const events = user.events.filter(event => {
+                // Check if event is happening today or from today
+                const eventDate = new Date(event.start.dateTime);
+                const today = new Date();
+                return (eventDate == today);
+            }) || [];
+
+            // const events = user.events || [];
+            return res.status(200).json(events);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send("Internal server error");
+        }
+    })
+    
+})
+
 router.post("/user/update/home", async function (req,res,next){
     const userEmail = req.body.email;
     const newHomeAddress = req.body.homeAddress;
