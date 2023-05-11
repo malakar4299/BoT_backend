@@ -360,13 +360,19 @@ router.post('/user/calender/event', async function (req, res) {
                 return res.status(404).send("User not found");
             }
     
-            const events = user.events.sort({start: 1}).filter(event => {
+            const events = user.events.filter(event => {
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
                 const today = new Date();
                 today.setDate(today.getDate() - 1);
                 return (eventDate >= today);
             }) || [];
+
+            events.sort((a, b) => {
+                const dateA = new Date(a.start.dateTime);
+                const dateB = new Date(b.start.dateTime);
+                return dateA - dateB;
+            });
 
             // const events = user.events || [];
             return res.status(200).json(events);
@@ -396,7 +402,7 @@ router.post('/user/calender/event/today', async function (req, res) {
                 return res.status(404).send("User not found");
             }
     
-            const events = user.events.sort({start: 1}).filter(event => {
+            const events = user.events.filter(event => {
                 // Check if event is happening today or from today
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
@@ -417,6 +423,12 @@ router.post('/user/calender/event/today', async function (req, res) {
                 // Return true if eventDateInNY is in todayInNY, else false
                 return isToday;
             }) || [];
+
+            events.sort((a, b) => {
+                const dateA = new Date(a.start.dateTime);
+                const dateB = new Date(b.start.dateTime);
+                return dateA - dateB;
+            });
 
             // const events = user.events || [];
             return res.status(200).json(events);
