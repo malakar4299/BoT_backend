@@ -360,7 +360,7 @@ router.post('/user/calender/event', async function (req, res) {
                 return res.status(404).send("User not found");
             }
     
-            const events = user.events.sort({'start.dateTime': 'asc'}).filter(event => {
+            const events = user.events.sort({start: 1}).filter(event => {
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
                 const today = new Date();
@@ -396,7 +396,7 @@ router.post('/user/calender/event/today', async function (req, res) {
                 return res.status(404).send("User not found");
             }
     
-            const events = user.events.sort({'start.dateTime': 'asc'}).filter(event => {
+            const events = user.events.sort({start: 1}).filter(event => {
                 // Check if event is happening today or from today
                 // Check if event is happening today or from today
                 const eventDate = new Date(event.start.dateTime);
